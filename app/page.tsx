@@ -1,101 +1,107 @@
-import Image from "next/image";
+'use client'
+import { useState, useCallback } from 'react'
+import { javascript } from "@codemirror/lang-javascript";
+import { html } from "@codemirror/lang-html";
+import { css } from "@codemirror/lang-css";
+import Navbar from './components/Navbar';
+import Result from './components/Result';
+import CodeMirror from "@uiw/react-codemirror";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHtml5, faCss3Alt } from '@fortawesome/free-brands-svg-icons';
+import { faCode } from '@fortawesome/free-solid-svg-icons';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [html_edit, setHtml_Edit] = useState('<h1 id="heading1">👋 Hello world! </h1>');
+  const [css_edit, setCss_Edit] = useState('body{ color: white; background: #f06d06; text-align: center; }');
+  const [js_edit, setJs_Edit] = useState('document.getElementById("heading1").style.color = "white";');
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+
+  const onChangeHtml = useCallback((value: string) => {
+    setHtml_Edit(value);
+  }, []);
+
+
+  const onChangeCss = useCallback((value: string) => {
+    setCss_Edit(value);
+  }, []);
+
+  const onChangeJavaScript = useCallback((value: string) => {
+    setJs_Edit(value);
+  }, []);
+
+  const srcCode = `
+  <html>
+      <body>${html_edit}</body>
+      <style>${css_edit}</style>
+      <script>${js_edit}</script>
+  </html>
+  `
+
+  return (
+    <div>
+      <Navbar />
+      <div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 border-t border-b border-gray-700">
+          <div className='bg-black border-r border-gray-600'>
+            <div className="shadow" style={{ margin: "1rem" }}>
+              <div className='flex items-center justify-center p-2 gap-2 bg-[#282c34] border-t-4 border-gray-600' style={{ width: "30%" }}>
+                <FontAwesomeIcon icon={faHtml5} style={{ height: '24px', width: '28px' }} color="orange" />
+                <h2 className="text-lg font-semibold text-white">
+                  HTML
+                </h2>
+              </div>
+              <CodeMirror
+                className="editor text-md bg-[#282c34] p-2"
+                value={html_edit}
+                height="250px"
+                theme="dark"
+                extensions={[html()]}
+                onChange={onChangeHtml}
+              />
+            </div>
+          </div>
+          <div className='bg-black border-r border-gray-600'>
+            <div className="shadow" style={{ margin: "1rem" }}>
+              <div className='flex items-center justify-center p-2 gap-2 bg-[#282c34] border-t-4 border-gray-600' style={{ width: "30%" }}>
+                <FontAwesomeIcon icon={faCss3Alt} style={{ height: '24px', width: '28px' }} color="blue" />
+                <h2 className="text-lg font-semibold text-white">
+                  CSS
+                </h2>
+              </div>
+              <CodeMirror
+                className="editor text-md bg-[#282c34] p-2"
+                value={css_edit}
+                height="250px"
+                theme="dark"
+                extensions={[css()]}
+                onChange={onChangeCss}
+              />
+            </div>
+          </div>
+          <div className='bg-black border-r border-gray-600'>
+            <div className="shadow" style={{ margin: "1rem" }}>
+              <div className='flex items-center justify-center p-2 gap-2 bg-[#282c34] border-t-4 border-gray-600' style={{ width: "30%" }}>
+                <FontAwesomeIcon icon={faCode} style={{ height: '24px', width: '28px' }} color="yellow" />
+                <h2 className="text-lg font-semibold text-white">
+                  JS
+                </h2>
+              </div>
+              <CodeMirror
+                className="editor text-md bg-[#282c34] p-2"
+                value={js_edit}
+                height="250px"
+                theme="dark"
+                extensions={[javascript()]}
+                onChange={onChangeJavaScript}
+              />
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+
+        <Result
+          srcCode={srcCode}
+        />
+      </div>
+    </div >
   );
 }
